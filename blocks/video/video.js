@@ -62,20 +62,25 @@ export default async function decorate(block) {
 
     block.append(videoBg);
 
-    // Content overlay
+    // Content overlay - title top-left, CTAs bottom-center
     const overlay = document.createElement('div');
     overlay.className = 'video-overlay';
 
     if (headingRow) {
       const headingText = headingRow.textContent.trim();
       if (headingText) {
+        const topSection = document.createElement('div');
+        topSection.className = 'video-overlay-top';
         const h1 = document.createElement('h1');
         h1.textContent = headingText;
-        overlay.append(h1);
+        topSection.append(h1);
+        overlay.append(topSection);
       }
     }
 
     if (ctaRow) {
+      const bottomSection = document.createElement('div');
+      bottomSection.className = 'video-overlay-bottom';
       const ctaContainer = document.createElement('div');
       ctaContainer.className = 'video-ctas';
       const links = ctaRow.querySelectorAll('a');
@@ -86,7 +91,8 @@ export default async function decorate(block) {
         btn.className = i === 0 ? 'button secondary' : 'button';
         ctaContainer.append(btn);
       });
-      overlay.append(ctaContainer);
+      bottomSection.append(ctaContainer);
+      overlay.append(bottomSection);
     }
 
     block.append(overlay);
