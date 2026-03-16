@@ -3,17 +3,19 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  grid-gap: 24px;
+  grid-template-columns: 1fr;
+  grid-gap: 32px;
+}
+
+@media (width >= 600px) {
+  .cards > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
   background-color: var(--background-color);
-}
-
-.cards .cards-card-body {
-  margin: 16px;
+  text-align: center;
 }
 
 .cards .cards-card-image {
@@ -23,5 +25,45 @@
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.cards .cards-card-body {
+  padding: 8px 16px 24px;
+}
+
+.cards .cards-card-body h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 8px 0;
+  color: var(--text-color);
+}
+
+.cards .cards-card-body h3 a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.cards .cards-card-body p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--dark-color);
+  margin: 8px 0;
+}
+
+/* Override EDS button styling for card links */
+.cards .cards-card-body a.button:any-link {
+  background-color: transparent;
+  border: 2px solid var(--secondary-orange);
+  color: var(--secondary-orange);
+  padding: 8px 20px;
+  font-size: 13px;
+  border-radius: 30px;
+  margin: 4px 0 0;
+}
+
+.cards .cards-card-body a.button:hover {
+  background-color: var(--secondary-orange);
+  color: white;
+  transform: none;
 }

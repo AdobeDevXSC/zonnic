@@ -1,0 +1,90 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://www.zonnic.com"
+      ],
+      "description": "Zonnic homepage with hero video sections, product columns, information cards, and FAQ accordion",
+      "blocks": [
+        {
+          "name": "video",
+          "instances": [
+            ".hero-section#hero-1",
+            ".hero-section#hero-2"
+          ]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            ".half-blocks"
+          ]
+        },
+        {
+          "name": "cards",
+          "instances": [
+            ".news-section .news-row"
+          ]
+        },
+        {
+          "name": "accordion",
+          "instances": [
+            ".faq-section"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "Video Hero - Pouches",
+          "selector": ".hero-section#hero-1",
+          "style": null,
+          "blocks": [
+            "video"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "Video Hero - Spray",
+          "selector": ".hero-section#hero-2",
+          "style": null,
+          "blocks": [
+            "video"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-3",
+          "name": "Product Information Columns",
+          "selector": ".half-blocks",
+          "style": null,
+          "blocks": [
+            "columns"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-4",
+          "name": "Information Cards",
+          "selector": ".news-section",
+          "style": null,
+          "blocks": [
+            "cards"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-5",
+          "name": "FAQ Accordion",
+          "selector": ".faq-section",
+          "style": "light-grey",
+          "blocks": [
+            "accordion"
+          ],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

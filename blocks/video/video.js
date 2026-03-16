@@ -1,72 +1,17 @@
 /*
  * Video Block
- * Show a video referenced by a link
+ * Show a video as a hero background with heading and CTAs, or as a standard embed.
  * https://www.hlx.live/developer/block-collection/video
  */
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-function embedYoutube(url, autoplay, background) {
-  const usp = new URLSearchParams(url.search);
-  let suffix = '';
-  if (background || autoplay) {
-    const suffixParams = {
-      autoplay: autoplay ? '1' : '0',
-      mute: background ? '1' : '0',
-      controls: background ? '0' : '1',
-      disablekb: background ? '1' : '0',
-      loop: background ? '1' : '0',
-      playsinline: background ? '1' : '0',
-    };
-    suffix = `&${Object.entries(suffixParams).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`;
-  }
-  let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
-  const embed = url.pathname;
-  if (url.origin.includes('youtu.be')) {
-    [, vid] = url.pathname.split('/');
-  }
-
-  const temp = document.createElement('div');
-  temp.innerHTML = `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-      <iframe src="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
-      allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture" allowfullscreen="" scrolling="no" title="Content from Youtube" loading="lazy"></iframe>
-    </div>`;
-  return temp.children.item(0);
-}
-
-function embedVimeo(url, autoplay, background) {
-  const [, video] = url.pathname.split('/');
-  let suffix = '';
-  if (background || autoplay) {
-    const suffixParams = {
-      autoplay: autoplay ? '1' : '0',
-      background: background ? '1' : '0',
-    };
-    suffix = `?${Object.entries(suffixParams).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`;
-  }
-  const temp = document.createElement('div');
-  temp.innerHTML = `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-      <iframe src="https://player.vimeo.com/video/${video}${suffix}" 
-      style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
-      frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  
-      title="Content from Vimeo" loading="lazy"></iframe>
-    </div>`;
-  return temp.children.item(0);
-}
-
-function getVideoElement(source, autoplay, background) {
+function getVideoElement(source) {
   const video = document.createElement('video');
-  video.setAttribute('controls', '');
-  if (autoplay) video.setAttribute('autoplay', '');
-  if (background) {
-    video.setAttribute('loop', '');
-    video.setAttribute('playsinline', '');
-    video.removeAttribute('controls');
-    video.addEventListener('canplay', () => {
-      video.muted = true;
-      if (autoplay) video.play();
-    });
-  }
+  video.setAttribute('loop', '');
+  video.setAttribute('playsinline', '');
+  video.setAttribute('muted', '');
+  video.muted = true;
 
   const sourceEl = document.createElement('source');
   sourceEl.setAttribute('src', source);
@@ -76,70 +21,99 @@ function getVideoElement(source, autoplay, background) {
   return video;
 }
 
-const loadVideoEmbed = (block, link, autoplay, background) => {
-  if (block.dataset.embedLoaded === 'true') {
-    return;
-  }
-  const url = new URL(link);
-
-  const isYoutube = link.includes('youtube') || link.includes('youtu.be');
-  const isVimeo = link.includes('vimeo');
-
-  if (isYoutube) {
-    const embedWrapper = embedYoutube(url, autoplay, background);
-    block.append(embedWrapper);
-    embedWrapper.querySelector('iframe').addEventListener('load', () => {
-      block.dataset.embedLoaded = true;
-    });
-  } else if (isVimeo) {
-    const embedWrapper = embedVimeo(url, autoplay, background);
-    block.append(embedWrapper);
-    embedWrapper.querySelector('iframe').addEventListener('load', () => {
-      block.dataset.embedLoaded = true;
-    });
-  } else {
-    const videoEl = getVideoElement(link, autoplay, background);
-    block.append(videoEl);
-    videoEl.addEventListener('canplay', () => {
-      block.dataset.embedLoaded = true;
-    });
-  }
-};
-
 export default async function decorate(block) {
-  const placeholder = block.querySelector('picture');
-  const link = block.querySelector('a').href;
-  block.textContent = '';
-  block.dataset.embedLoaded = false;
+  const rows = [...block.children];
+  if (rows.length === 0) return;
 
-  const autoplay = block.classList.contains('autoplay');
-  if (placeholder) {
-    block.classList.add('placeholder');
-    const wrapper = document.createElement('div');
-    wrapper.className = 'video-placeholder';
-    wrapper.append(placeholder);
+  // Extract content from rows
+  const firstRow = rows[0];
+  const link = firstRow.querySelector('a');
+  const posterImg = firstRow.querySelector('img');
 
-    if (!autoplay) {
-      wrapper.insertAdjacentHTML(
-        'beforeend',
-        '<div class="video-placeholder-play"><button type="button" title="Play"></button></div>',
-      );
-      wrapper.addEventListener('click', () => {
-        wrapper.remove();
-        loadVideoEmbed(block, link, true, false);
-      });
+  if (!link) return;
+
+  const videoSrc = link.href;
+  const headingRow = rows.length > 1 ? rows[1] : null;
+  const ctaRow = rows.length > 2 ? rows[2] : null;
+
+  // Determine if this is a hero-style video (has heading or CTAs)
+  const isHero = headingRow || ctaRow;
+
+  if (isHero) {
+    block.classList.add('hero');
+
+    // Build hero structure
+    block.textContent = '';
+
+    // Video background container
+    const videoBg = document.createElement('div');
+    videoBg.className = 'video-background';
+
+    if (posterImg) {
+      const poster = document.createElement('div');
+      poster.className = 'video-poster';
+      const img = document.createElement('img');
+      img.src = posterImg.src;
+      img.alt = posterImg.alt || '';
+      img.loading = 'eager';
+      poster.append(img);
+      videoBg.append(poster);
     }
-    block.append(wrapper);
-  }
 
-  if (!placeholder || autoplay) {
+    block.append(videoBg);
+
+    // Content overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'video-overlay';
+
+    if (headingRow) {
+      const headingText = headingRow.textContent.trim();
+      if (headingText) {
+        const h1 = document.createElement('h1');
+        h1.textContent = headingText;
+        overlay.append(h1);
+      }
+    }
+
+    if (ctaRow) {
+      const ctaContainer = document.createElement('div');
+      ctaContainer.className = 'video-ctas';
+      const links = ctaRow.querySelectorAll('a');
+      links.forEach((a, i) => {
+        const btn = document.createElement('a');
+        btn.href = a.href;
+        btn.textContent = a.textContent;
+        btn.className = i === 0 ? 'button secondary' : 'button';
+        ctaContainer.append(btn);
+      });
+      overlay.append(ctaContainer);
+    }
+
+    block.append(overlay);
+
+    // Load video with IntersectionObserver
     const observer = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         observer.disconnect();
-        const playOnLoad = autoplay && !prefersReducedMotion.matches;
-        loadVideoEmbed(block, link, playOnLoad, autoplay);
+        if (!prefersReducedMotion.matches) {
+          const video = getVideoElement(videoSrc);
+          videoBg.prepend(video);
+          video.addEventListener('canplay', () => {
+            video.play();
+            const poster = videoBg.querySelector('.video-poster');
+            if (poster) poster.style.opacity = '0';
+          });
+        }
       }
     });
     observer.observe(block);
+  } else {
+    // Standard video embed (non-hero)
+    block.textContent = '';
+    block.dataset.embedLoaded = false;
+    const video = getVideoElement(videoSrc);
+    video.setAttribute('controls', '');
+    video.removeAttribute('muted');
+    block.append(video);
   }
 }

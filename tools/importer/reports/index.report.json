@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "url": "https://www.zonnic.com",
+  "path": "index",
+  "timestamp": "2026-03-15T22:37:51.754Z",
+  "title": "Zonnic Stop Smoking Aids | Aids to quit smoking, and against withdrawal symptoms",
+  "template": "homepage",
+  "blocks": [
+    "video",
+    "video",
+    "columns",
+    "cards",
+    "accordion"
+  ]
+}

@@ -15,26 +15,32 @@
   --background-color: white;
   --light-color: #f8f8f8;
   --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --text-color: #212529;
+  --link-color: #2f539d;
+  --link-hover-color: #1e3a6e;
+  --primary-blue: #2f539d;
+  --secondary-orange: #ff7461;
+  --accent-teal: #64d5d0;
+  --accent-yellow: #feb716;
+  --background-beige: #f9f7f0;
+  --light-grey: #f5f5f5;
 
   /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --body-font-family: raleway, raleway-fallback, sans-serif;
+  --heading-font-family: raleway, raleway-fallback, sans-serif;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 18px;
+  --body-font-size-s: 16px;
+  --body-font-size-xs: 14px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  --heading-font-size-xxl: 40px;
+  --heading-font-size-xl: 32px;
+  --heading-font-size-l: 28px;
+  --heading-font-size-m: 24px;
+  --heading-font-size-s: 20px;
+  --heading-font-size-xs: 18px;
 
   /* nav heights */
   --nav-height: 64px;
@@ -44,29 +50,18 @@
 
 /* fallback fonts */
 @font-face {
-  font-family: roboto-condensed-fallback;
-  size-adjust: 88.82%;
-  src: local('Arial');
-}
-
-@font-face {
-  font-family: roboto-fallback;
-  size-adjust: 99.529%;
+  font-family: raleway-fallback;
+  size-adjust: 100%;
   src: local('Arial');
 }
 
 @media (width >= 900px) {
   :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
     /* heading sizes */
-    --heading-font-size-xxl: 45px;
+    --heading-font-size-xxl: 48px;
     --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
+    --heading-font-size-l: 30px;
+    --heading-font-size-m: 24px;
     --heading-font-size-s: 20px;
     --heading-font-size-xs: 18px;
   }
@@ -115,9 +110,10 @@ h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 600;
+  font-weight: 800;
   line-height: 1.25;
   scroll-margin: 40px;
+  color: var(--text-color);
 }
 
 h1 { font-size: var(--heading-font-size-xxl); }
@@ -179,28 +175,31 @@ button {
   box-sizing: border-box;
   display: inline-block;
   max-width: 100%;
-  margin: 12px 0;
+  margin: 8px 8px 8px 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
+  border-radius: 30px;
+  padding: 12px 28px;
   font-family: var(--body-font-family);
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: var(--body-font-size-s);
   line-height: 1.25;
   text-align: center;
   text-decoration: none;
-  background-color: var(--link-color);
-  color: var(--background-color);
+  background-color: var(--secondary-orange);
+  color: white;
   cursor: pointer;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 a.button:hover,
 a.button:focus,
 button:hover,
 button:focus {
-  background-color: var(--link-hover-color);
+  background-color: #e5614f;
+  transform: translateY(-1px);
   cursor: pointer;
 }
 
@@ -212,9 +211,15 @@ button:disabled:hover {
 
 a.button.secondary,
 button.secondary {
-  background-color: unset;
-  border: 2px solid currentcolor;
-  color: var(--text-color);
+  background-color: transparent;
+  border: 2px solid var(--secondary-orange);
+  color: var(--secondary-orange);
+}
+
+a.button.secondary:hover,
+button.secondary:hover {
+  background-color: var(--secondary-orange);
+  color: white;
 }
 
 main img {
@@ -236,13 +241,13 @@ main img {
 
 /* sections */
 main > .section {
-  margin: 40px 0;
+  margin: 0;
 }
 
 main > .section > div {
   max-width: 1200px;
   margin: auto;
-  padding: 0 24px;
+  padding: 40px 24px;
 }
 
 main > .section:first-of-type {
@@ -251,7 +256,7 @@ main > .section:first-of-type {
 
 @media (width >= 900px) {
   main > .section > div {
-    padding: 0 32px;
+    padding: 60px 32px;
   }
 }
 
@@ -260,5 +265,27 @@ main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
-  padding: 40px 0;
+}
+
+main .section.light-grey {
+  background-color: var(--light-grey);
+  margin: 0;
+}
+
+/* Full-width sections for video hero blocks */
+main > .section > div:has(.video) {
+  max-width: none;
+  padding: 0;
+}
+
+/* Columns section - no max-width for split background */
+main > .section > div:has(.columns) {
+  max-width: none;
+  padding: 0;
+}
+
+/* Hide metadata block */
+.metadata-wrapper,
+div.metadata {
+  display: none;
 }
