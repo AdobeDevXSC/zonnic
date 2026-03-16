@@ -17,4 +17,35 @@ export default async function decorate(block) {
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
   block.append(footer);
+
+  // Add structure classes for design layout
+  const sections = block.querySelectorAll('.section');
+  const firstSection = sections[0];
+  if (firstSection) {
+    const wrapper = firstSection.querySelector('.default-content-wrapper');
+    if (wrapper) {
+      const uls = wrapper.querySelectorAll(':scope > ul');
+      const disclaimer = wrapper.querySelector(':scope > p');
+      if (uls.length >= 2) {
+        const navWrapper = document.createElement('div');
+        navWrapper.className = 'footer-nav';
+        uls.forEach((ul) => navWrapper.appendChild(ul));
+        wrapper.insertBefore(navWrapper, wrapper.firstChild);
+      }
+      if (disclaimer) {
+        disclaimer.classList.add('footer-disclaimer');
+      }
+    }
+  }
+
+  const lastSection = sections.length > 1 ? sections[1] : null;
+  if (lastSection) {
+    lastSection.classList.add('footer-bottom');
+    const wrapper = lastSection.querySelector('.default-content-wrapper');
+    if (wrapper) {
+      const paragraphs = wrapper.querySelectorAll(':scope > p');
+      if (paragraphs[0]) paragraphs[0].classList.add('footer-copyright');
+      if (paragraphs[1]) paragraphs[1].classList.add('footer-policies');
+    }
+  }
 }

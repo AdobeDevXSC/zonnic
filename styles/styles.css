@@ -82,7 +82,14 @@ body.appear {
 }
 
 header {
+  position: relative;
+  z-index: 100;
   height: var(--header-height);
+}
+
+/* Pull main up so hero extends under header; header scrolls away */
+main {
+  margin-top: calc(-1 * var(--header-height));
 }
 
 header .header,
@@ -245,7 +252,7 @@ main > .section {
 }
 
 main > .section > div {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: auto;
   padding: 40px 24px;
 }
@@ -276,6 +283,11 @@ main .section.light-grey {
 main > .section > div:has(.video) {
   max-width: none;
   padding: 0;
+}
+
+/* First section with video hero: full viewport, no margin (header overlays) */
+main > .section:first-of-type:has(.video.hero) {
+  margin: 0;
 }
 
 /* Columns section - no max-width for split background */

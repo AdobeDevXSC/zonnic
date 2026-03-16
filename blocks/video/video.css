@@ -13,15 +13,15 @@
 .video.hero {
   position: relative;
   width: 100%;
-  min-height: 500px;
+  min-height: 50vh;
+  min-height: 50dvh;
   overflow: hidden;
-  display: flex;
-  align-items: flex-end;
 }
 
 @media (width >= 900px) {
   .video.hero {
-    min-height: 600px;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 
@@ -51,18 +51,21 @@
 }
 
 .video.hero .video-overlay {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  padding: 40px 24px 60px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  pointer-events: none;
 }
 
-@media (width >= 900px) {
-  .video.hero .video-overlay {
-    padding: 60px 32px 80px;
-  }
+.video.hero .video-overlay > * {
+  pointer-events: auto;
+}
+
+/* Title - top-left */
+.video.hero .video-overlay-top {
+  position: absolute;
+  top: 20%;
+  left: 6%;
 }
 
 .video.hero .video-overlay h1 {
@@ -70,20 +73,29 @@
   font-size: 36px;
   font-weight: 900;
   line-height: 1.1;
-  margin: 0 0 24px;
+  margin: 0;
   text-shadow: 0 2px 8px rgb(0 0 0 / 20%);
 }
 
 @media (width >= 900px) {
   .video.hero .video-overlay h1 {
-    font-size: 56px;
+    font-size: 74px;
   }
+}
+
+/* CTAs - bottom-center */
+.video.hero .video-overlay-bottom {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .video.hero .video-ctas {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .video.hero .video-ctas a.button {
@@ -106,14 +118,15 @@
 }
 
 .video.hero .video-ctas a.button.secondary {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, .35);
   border: 2px solid white;
-  color: white;
+  color: #2f539d;
+  border: none;
 }
 
 .video.hero .video-ctas a.button.secondary:hover {
-  background-color: rgb(255 255 255 / 15%);
-  color: white;
+  background-color: #fff;
+  color: #2f539d;
 }
 
 .video.hero .video-ctas a.button:not(.secondary) {
